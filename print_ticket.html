@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Queue Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 80px;
+    }
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    .qr {
+      margin-top: 30px;
+    }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="ticketNumber">Number</h1>
+  <div class="qr">
+    <img id="qrCode" alt="QR Code">
+  </div>
+  <div class="footer">
+    Scan this code to check your queue status
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const number = params.get("number");
+    document.getElementById("ticketNumber").innerText = "Number " + number;
+
+    // Load QR code from backend
+    document.getElementById("qrCode").src = `http://127.0.0.1:5000/ticket/${number}`;
+
+    // Auto-print when QR is loaded
+    document.getElementById("qrCode").onload = () => window.print();
+  </script>
+</body>
+</html>

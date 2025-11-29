@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Queue Management – Admin Panel</h1>
+
+  <div class="card">
+    <h2>Issue New Number</h2>
+    <div class="action-grid">
+      <div class="action-card" onclick="takeNumber()">
+        <h3>🎟️ Issue Number</h3>
+        <p>Generate next queue ticket</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Call Next</h2>
+    <div class="action-grid">
+      <div class="action-card" onclick="callNext(1)">
+        <h3>🧑‍💼 Counter 1</h3>
+        <p>Call next in line</p>
+      </div>
+      <div class="action-card" onclick="callNext(2)">
+        <h3>🧑‍💼 Counter 2</h3>
+        <p>Call next in line</p>
+      </div>
+      <div class="action-card" onclick="callNext(3)">
+        <h3>🧑‍💼 Counter 3</h3>
+        <p>Call next in line</p>
+      </div>
+      <div class="action-card" onclick="callNext(4)">
+        <h3>🧑‍💼 Counter 4</h3>
+        <p>Call next in line</p>
+      </div>
+      <div class="action-card" onclick="callNext(5)">
+        <h3>🧑‍💼 Counter 5</h3>
+        <p>Call next in line</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Current Status</h2>
+    <div class="counter-boxes" id="counterBoxes"></div>
+  </div>
+
+  <div class="card">
+    <h2>Waiting Queue</h2>
+    <div id="queueList" class="queue">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h2>Manual Counter Control</h2>
+    <div class="manual-card">
+      <h3>🔧 Update Counter</h3>
+      <select id="counterSelect">
+        <option value="1">Counter 1</option>
+        <option value="2">Counter 2</option>
+        <option value="3">Counter 3</option>
+        <option value="4">Counter 4</option>
+        <option value="5">Counter 5</option>
+      </select>
+      <br />
+      <input type="number" id="manualNumber" placeholder="Enter number" />
+      <br />
+      <button onclick="setCounter()">Update</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>System Control</h2>
+    <div class="manual-card">
+      <h3>🔄 Reset All Counters</h3>
+      <p>This will clear all counters, empty the queue, and reset numbering back to 1.</p>
+      <button class="reset-btn" onclick="resetCounters()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    const baseUrl = "http://127.0.0.1:5000";
+
+    async function takeNumber() {
+      const res = await fetch(`${baseUrl}/take_number`, { method: "POST" });
+      const data = await res.json();
+      alert("New number issued: " + data.your_number);
+      refreshQueue();
+    }
+
+    async function callNext(counter) {
+      const res = await fetch(`${baseUrl}/call_next/${counter}`, { method: "POST" });
+      const data = await res.json();
+      if (data.called_number) {
+        alert("Counter " + data.counter + " is now serving number " + data.called_number);
+      } else {
+        alert(data.message);
+      }
+      refreshStatus();
+      refreshQueue();
+    }
+
+    async function refreshStatus() {
+      const res = await fetch(`${baseUrl}/status`);
+      const data = await res.json();
+      const container = document.getElementById("counterBoxes");
+      container.innerHTML = "";
+
+      for (const counter in data) {
+        const number = data[counter] || "-";
+        const box = document.createElement("div");
+        box.className = "counter-box";
+        box.innerHTML = `<h3>Counter ${counter}</h3><p>Now Serving: ${number}</p>`;
+        container.appendChild(box);
+      }
+    }
+
+    async function setCounter() {
+      const counterId = document.getElementById("counterSelect").value;
+      const number = parseInt(document.getElementById("manualNumber").value);
+
+      if (isNaN(number)) {
+        alert("Please enter a valid number.");
+        return;
+      }
+
+      const res = await fetch(`${baseUrl}/set_counter/${counterId}/${number}`, { method: "POST" });
+      const data = await res.json();
+      alert(data.message);
+      refreshStatus();
+    }
+
+    async function resetCounters() {
+      const confirmReset = confirm("Are you sure you want to reset all counters and queue?");
+      if (!confirmReset) return;
+
+      const res = await fetch(`${baseUrl}/reset_counters`, { method: "POST" });
+      const data = await res.json();
+      alert(data.message);
+      refreshStatus();
+      refreshQueue();
+    }
+
+    async function refreshQueue() {
+      const res = await fetch(`${baseUrl}/queue`);
+      const data = await res.json();
+      document.getElementById("queueList").innerText =
+        data.waiting.length ? data.waiting.join(", ") : "No one waiting";
+    }
+
+    setInterval(() => { refreshStatus(); refreshQueue(); }, 5000);
+    refreshStatus();
+    refreshQueue();
+  </script>
+</body>
+</html>

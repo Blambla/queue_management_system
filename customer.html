@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Queue Status</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Queue Status</h1>
+
+  <div class="card">
+    <h2>Currently Serving</h2>
+    <div class="counter-boxes" id="counterBoxes"></div>
+  </div>
+
+  <div class="card">
+    <h2>Waiting Queue</h2>
+    <div id="queueList" class="queue">Loading...</div>
+  </div>
+
+  <script>
+    const baseUrl = "http://127.0.0.1:5000";
+
+    async function refreshStatus() {
+      const res = await fetch(`${baseUrl}/status`);
+      const data = await res.json();
+      const container = document.getElementById("counterBoxes");
+      container.innerHTML = "";
+
+      for (const counter in data) {
+        const number = data[counter] || "-";
+        const box = document.createElement("div");
+        box.className = "counter-box";
+        box.innerHTML = `<h3>Counter ${counter}</h3><p>Now Serving: ${number}</p>`;
+        container.appendChild(box);
+      }
+
+      const resQueue = await fetch(`${baseUrl}/queue`);
+      const dataQueue = await resQueue.json();
+      document.getElementById("queueList").innerText =
+        dataQueue.waiting.length ? dataQueue.waiting.join(", ") : "No one waiting";
+    }
+
+    setInterval(refreshStatus, 5000);
+    refreshStatus();
+  </script>
+</body>
+</html>
