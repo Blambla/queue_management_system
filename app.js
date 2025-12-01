@@ -69,19 +69,16 @@ app.post("/api/reset_counters", (req, res) => {
   res.json({ message: "All counters and queue have been reset." });
 });
 
-
 // ✅ Google Sheets setup
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, "queue-management-479913-08fc848e515a.json"),
+  keyFile: path.join(__dirname, "queue-management-479913-babb9f68110e.json"),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"]
 });
-
-const sheets = google.sheets({ version: "v4", auth });
 
 // Replace with your actual spreadsheet ID
 const SPREADSHEET_ID = "1__0qQuMq4XChiQmdGHq_X470f-4X-hTGtivNGGNHQeQ";
 
-// ✅ Coaching submission route (only one version!)
+// ✅ Coaching submission route
 app.post("/api/submit_coaching", async (req, res) => {
   const { nama, perusahaan, email, phone, coaching, tanggal } = req.body;
 
@@ -100,10 +97,11 @@ app.post("/api/submit_coaching", async (req, res) => {
   console.log("Saved submission:", customerData[ticket]);
 
   try {
+    // ✅ Always get a fresh authenticated client
     const authClient = await auth.getClient();
+    const sheets = google.sheets({ version: "v4", auth: authClient });
 
     await sheets.spreadsheets.values.append({
-      auth: authClient,
       spreadsheetId: SPREADSHEET_ID,
       range: "Sheet1!A:H", // adjust to your sheet/tab name
       valueInputOption: "USER_ENTERED",
