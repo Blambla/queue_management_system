@@ -72,7 +72,7 @@ app.post("/api/reset_counters", (req, res) => {
 
 // ✅ Google Sheets setup
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, "queue-management-479913-e59087477d58.json"),
+  keyFile: path.join(__dirname, "queue-management-479913-08fc848e515a.json"),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"]
 });
 
