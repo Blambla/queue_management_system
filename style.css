@@ -217,3 +217,43 @@ button:hover {
 .reset-btn:active {
   transform: scale(0.97);
 }
+
+.centered-card {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.card-link {
+  background-color: #f3f3f3;
+  border: 2px solid #0078d4;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  width: 600px; /* Match other cards */
+  text-align: center;
+}
+
+.card-link h3 {
+  margin-top: 0;
+  color: #0078d4;
+}
+
+.card-link p {
+  margin: 8px 0;
+  color: #333;
+}
+
+.card-button {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: #0078d4;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.card-button:hover {
+  background-color: #005a9e;
+}

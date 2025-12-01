@@ -72,6 +72,14 @@
     </div>
   </div>
 
+  <div class="centered-card">
+    <div class="card-link">
+      <h3>Customer View</h3>
+      <p>Open the customer-facing queue page.</p>
+      <a href="customer.html" class="card-button">Go to Customer Page</a>
+    </div>
+  </div>
+
   <div class="card">
     <h2>System Control</h2>
     <div class="manual-card">
@@ -82,17 +90,15 @@
   </div>
 
   <script>
-    const baseUrl = "http://127.0.0.1:5000";
-
     async function takeNumber() {
-      const res = await fetch(`${baseUrl}/take_number`, { method: "POST" });
+      const res = await fetch('/api/take_number', { method: "POST" });
       const data = await res.json();
       alert("New number issued: " + data.your_number);
       refreshQueue();
     }
 
     async function callNext(counter) {
-      const res = await fetch(`${baseUrl}/call_next/${counter}`, { method: "POST" });
+      const res = await fetch(`/api/call_next/${counter}`, { method: "POST" });
       const data = await res.json();
       if (data.called_number) {
         alert("Counter " + data.counter + " is now serving number " + data.called_number);
@@ -104,7 +110,7 @@
     }
 
     async function refreshStatus() {
-      const res = await fetch(`${baseUrl}/status`);
+      const res = await fetch('/api/status');
       const data = await res.json();
       const container = document.getElementById("counterBoxes");
       container.innerHTML = "";
@@ -127,7 +133,7 @@
         return;
       }
 
-      const res = await fetch(`${baseUrl}/set_counter/${counterId}/${number}`, { method: "POST" });
+      const res = await fetch(`/api/set_counter/${counterId}/${number}`, { method: "POST" });
       const data = await res.json();
       alert(data.message);
       refreshStatus();
@@ -137,7 +143,7 @@
       const confirmReset = confirm("Are you sure you want to reset all counters and queue?");
       if (!confirmReset) return;
 
-      const res = await fetch(`${baseUrl}/reset_counters`, { method: "POST" });
+      const res = await fetch('/api/reset_counters', { method: "POST" });
       const data = await res.json();
       alert(data.message);
       refreshStatus();
@@ -145,12 +151,13 @@
     }
 
     async function refreshQueue() {
-      const res = await fetch(`${baseUrl}/queue`);
+      const res = await fetch('/api/queue');
       const data = await res.json();
       document.getElementById("queueList").innerText =
         data.waiting.length ? data.waiting.join(", ") : "No one waiting";
     }
 
+    // Auto-refresh every 5 seconds
     setInterval(() => { refreshStatus(); refreshQueue(); }, 5000);
     refreshStatus();
     refreshQueue();

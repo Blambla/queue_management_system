@@ -19,10 +19,9 @@
   </div>
 
   <script>
-    const baseUrl = "http://127.0.0.1:5000";
-
     async function refreshStatus() {
-      const res = await fetch(`${baseUrl}/status`);
+      // Fetch current counters
+      const res = await fetch('/api/status');
       const data = await res.json();
       const container = document.getElementById("counterBoxes");
       container.innerHTML = "";
@@ -35,12 +34,14 @@
         container.appendChild(box);
       }
 
-      const resQueue = await fetch(`${baseUrl}/queue`);
+      // Fetch waiting queue
+      const resQueue = await fetch('/api/queue');
       const dataQueue = await resQueue.json();
       document.getElementById("queueList").innerText =
         dataQueue.waiting.length ? dataQueue.waiting.join(", ") : "No one waiting";
     }
 
+    // Auto-refresh every 5 seconds
     setInterval(refreshStatus, 5000);
     refreshStatus();
   </script>
