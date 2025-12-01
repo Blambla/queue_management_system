@@ -4,11 +4,13 @@ const cors = require("cors");
 const { google } = require("googleapis");
 const path = require("path");
 
+const PORT = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(express.json());
 
-// Serve static frontend files
-app.use(express.static("public"));
+// Serve static frontend files (absolute path)
+app.use(express.static(path.join(__dirname, "public")));
 
 // Global queue
 let queue = [];
@@ -69,7 +71,7 @@ const sheets = google.sheets({ version: "v4", auth });
 // Replace with your actual spreadsheet ID
 const SPREADSHEET_ID = "1__0qQuMq4XChiQmdGHq_X470f-4X-hTGtivNGGNHQeQ";
 
-// ✅ Coaching submission route (only one version!)
+// ✅ Coaching submission route
 app.post("/api/submit_coaching", async (req, res) => {
   const { nama, perusahaan, email, phone, coaching, tanggal } = req.body;
 
@@ -84,7 +86,15 @@ app.post("/api/submit_coaching", async (req, res) => {
   const submittedAt = new Date().toLocaleString("id-ID");
 
   // Save to memory
-  customerData[ticket] = { nama, perusahaan, email, phone, coaching, tanggal, submitted_at: submittedAt };
+  customerData[ticket] = {
+    nama,
+    perusahaan,
+    email,
+    phone,
+    coaching,
+    tanggal,
+    submitted_at: submittedAt
+  };
   console.log("Saved submission:", customerData[ticket]);
 
   try {
@@ -120,8 +130,11 @@ app.post("/api/submit_coaching", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Catch-all for unknown API routes
+app.use("/api/*", (req, res) => {
+  res.status(404).json({ error: "API route not found" });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
