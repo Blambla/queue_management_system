@@ -7,51 +7,51 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Queue Management – Admin Panel</h1>
+  <h1>Manajemen Antrian – Panel Admin</h1>
 
   <div class="card">
-    <h2>Issue New Number</h2>
+    <h2>Cetak Nomor Antrian</h2>
     <div class="action-grid">
       <div class="action-card" onclick="takeNumber()">
-        <h3>🎟️ Issue Number</h3>
-        <p>Generate next queue ticket</p>
+        <h3>🎟️ Cetak</h3>
+        <p>Cetak Nomor Antrian Selanjutnya</p>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h2>Call Next</h2>
+    <h2>Panggil Antrian Selanjutnya</h2>
     <div class="action-grid">
       <div class="action-card" onclick="callNext(1)">
         <h3>🧑‍💼 Counter 1</h3>
-        <p>Call next in line</p>
+        <p>Antrian Selanjutnya</p>
       </div>
       <div class="action-card" onclick="callNext(2)">
         <h3>🧑‍💼 Counter 2</h3>
-        <p>Call next in line</p>
+        <p>Antrian Selanjutnya</p>
       </div>
       <div class="action-card" onclick="callNext(3)">
         <h3>🧑‍💼 Counter 3</h3>
-        <p>Call next in line</p>
+        <p>Antrian Selanjutnya</p>
       </div>
       <div class="action-card" onclick="callNext(4)">
         <h3>🧑‍💼 Counter 4</h3>
-        <p>Call next in line</p>
+        <p>Antrian Selanjutnya</p>
       </div>
       <div class="action-card" onclick="callNext(5)">
         <h3>🧑‍💼 Counter 5</h3>
-        <p>Call next in line</p>
+        <p>Antrian Selanjutnya</p>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h2>Current Status</h2>
+    <h2>Status Saat Ini</h2>
     <div class="counter-boxes" id="counterBoxes"></div>
   </div>
 
   <div class="card">
-    <h2>Waiting Queue</h2>
+    <h2>Daftar Antrian</h2>
     <div id="queueList" class="queue">Loading...</div>
   </div>
 
@@ -73,11 +73,14 @@
     </div>
   </div>
 
-  <div class="centered-card">
-    <div class="card-link">
-      <h3>Customer View</h3>
-      <p>Open the customer-facing queue page.</p>
-      <a href="customer.html" class="card-button">Go to Customer Page</a>
+  <div class="card">
+    <h2>Tampilan Customer</h2>
+    <div class="action-grid">
+      <div class="action-card" id="openCustomerPage">
+        <h3>🧑‍💻 Buka Laman Customer</h3>
+        <p>Klik untuk membuka tampilan antrian pelanggan</p>
+        <button class="blue-btn">Go to Customer Page</button>
+      </div>
     </div>
   </div>
 
@@ -120,7 +123,7 @@
         const number = data[counter] || "-";
         const box = document.createElement("div");
         box.className = "counter-box";
-        box.innerHTML = `<h3>Counter ${counter}</h3><p>Now Serving: ${number}</p>`;
+        box.innerHTML = `<h3>Counter ${counter}</h3><p>Nomor Antrian: ${number}</p>`;
         container.appendChild(box);
       }
     }
@@ -157,6 +160,10 @@
       document.getElementById("queueList").innerText =
         data.waiting.length ? data.waiting.join(", ") : "No one waiting";
     }
+
+    document.getElementById("openCustomerPage").onclick = () => {
+      window.open("/customer.html", "_blank");
+    };
 
     // Auto-refresh every 5 seconds
     setInterval(() => { refreshStatus(); refreshQueue(); }, 5000);

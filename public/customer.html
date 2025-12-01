@@ -3,35 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Queue Status</title>
+  <title>Status Antrian</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Queue Status</h1>
+  <h1>Status Antrian</h1>
 
   <div class="card">
-    <h2>Currently Serving</h2>
+    <h2>Informasi Counter</h2>
     <div class="counter-boxes" id="counterBoxes"></div>
   </div>
 
   <div class="card">
-    <h2>Waiting Queue</h2>
+    <h2>Daftar Antrian</h2>
     <div id="queueList" class="queue">Loading...</div>
   </div>
 
   <div class="card">
-  <h2>Ambil Nomor Antrian</h2>
-  <div class="action-grid">
-    <div class="action-card" id="ambilNomorBtn">
-      <h3>🎟️ Ambil Nomor</h3>
-      <p>Klik untuk mengisi formulir dan mendapatkan nomor antrian</p>
+    <h2>Ambil Nomor Antrian</h2>
+    <div class="action-grid">
+      <div class="action-card" id="ambilNomorBtn">
+        <h3>🎟️ Ambil Nomor</h3>
+        <p>Klik untuk mengisi formulir dan mendapatkan nomor antrian</p>
+      </div>
     </div>
+  </div>
+
+  <div id="coachingModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+
+      <!-- Form Section -->
+      <div id="formSection">
+        <h2>Formulir Pendaftaran Coaching</h2>
+        <form id="coachingForm">
+          <label for="nama">Nama Personel *</label>
+          <input type="text" id="nama" name="nama" required>
+
+          <label for="perusahaan">Asal Perusahaan *</label>
+          <input type="text" id="perusahaan" name="perusahaan" required>
+
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="phone">Mobile Phone Number *</label>
+          <input type="tel" id="phone" name="phone" required>
+
+          <label>Opsi Coaching *</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-button">
+              <input type="checkbox" name="coaching" value="CIVD"> CIVD
+            </label>
+            <label class="checkbox-button">
+              <input type="checkbox" name="coaching" value="IOG e-Commerce"> IOG e-Commerce
+            </label>
+          </div>
+
+          <label>Tanggal Kehadiran</label>
+          <div class="checkbox-grid">
+            <label class="checkbox-button">
+              <input type="checkbox" name="tanggal" value="Rabu, 3 Desember 2025"> Rabu, 3 Desember 2025
+            </label>
+            <label class="checkbox-button">
+              <input type="checkbox" name="tanggal" value="Kamis, 4 Desember 2025"> Kamis, 4 Desember 2025
+            </label>
+          </div>
+
+          <button type="submit" class="blue-btn">Simpan</button>
+        </form>
+      </div>
+
+      <!-- Confirmation Section -->
+      <div id="confirmationSection" style="display:none; text-align:center;">
+        <h2>Nomor Antrian Anda 🎟️</h2>
+        <p id="queueNumber" style="font-size:2em; font-weight:bold; margin:10px 0;"></p>
+        <p id="companyName"></p>
+        <p id="submittedAt"></p>
+
+        <div class="checkbox-grid" style="justify-content:center; margin-top:16px;">
+          <label class="checkbox-button">
+            <input type="checkbox" id="confirmScreenshot">
+            Screenshot dan tunjukkan nomor antrian ini ketika memulai layanan
+          </label>
+        </div>
+
+        <button id="closeBtn" class="blue-btn">Tutup</button>
+      </div>
     </div>
   </div>
 
   <script>
+    // Refresh queue status
     async function refreshStatus() {
-      // Fetch current counters
       const res = await fetch('/api/status');
       const data = await res.json();
       const container = document.getElementById("counterBoxes");
@@ -41,20 +104,90 @@
         const number = data[counter] || "-";
         const box = document.createElement("div");
         box.className = "counter-box";
-        box.innerHTML = `<h3>Counter ${counter}</h3><p>Now Serving: ${number}</p>`;
+        box.innerHTML = `<h3>Counter ${counter}</h3><p>Nomor Antrian: ${number}</p>`;
         container.appendChild(box);
       }
 
-      // Fetch waiting queue
       const resQueue = await fetch('/api/queue');
       const dataQueue = await resQueue.json();
       document.getElementById("queueList").innerText =
-        dataQueue.waiting.length ? dataQueue.waiting.join(", ") : "No one waiting";
+        dataQueue.waiting.length ? dataQueue.waiting.join(", ") : "Tidak Ada Antrian";
     }
 
-    // Auto-refresh every 5 seconds
     setInterval(refreshStatus, 5000);
     refreshStatus();
+
+    const modal = document.getElementById("coachingModal");
+    const openBtn = document.getElementById("ambilNomorBtn");
+    const closeBtnIcon = document.querySelector(".close");
+    const confirmCheckbox = document.getElementById("confirmScreenshot");
+    const closeButton = document.getElementById("closeBtn");
+    const formSection = document.getElementById("formSection");
+    const confirmationSection = document.getElementById("confirmationSection");
+
+    // Open modal
+    openBtn.addEventListener("click", () => {
+      formSection.style.display = "block";
+      confirmationSection.style.display = "none";
+      confirmCheckbox.checked = false;
+      modal.style.display = "flex";
+    });
+
+    // Unified close logic
+    function attemptClose(e) {
+      if (confirmationSection.style.display !== "none") {
+        // Confirmation stage → require checkbox
+        if (confirmCheckbox.checked) {
+          modal.style.display = "none";
+        } else {
+          e.preventDefault();
+          alert("Silakan centang konfirmasi terlebih dahulu.");
+        }
+      } else {
+        // Form stage → allow closing freely
+        modal.style.display = "none";
+      }
+    }
+
+    closeBtnIcon.addEventListener("click", attemptClose);
+    closeButton.addEventListener("click", attemptClose);
+
+    // Form submission
+    document.getElementById("coachingForm").onsubmit = async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const payload = {
+        nama: formData.get("nama"),
+        perusahaan: formData.get("perusahaan"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        coaching: formData.getAll("coaching"),
+        tanggal: formData.getAll("tanggal")
+      };
+
+      try {
+        const res = await fetch("/api/submit_coaching", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Network error");
+
+        const data = await res.json();
+
+        formSection.style.display = "none";
+        confirmationSection.style.display = "block";
+
+        document.getElementById("queueNumber").innerText = data.your_number;
+        document.getElementById("companyName").innerText = "Perusahaan: " + data.perusahaan;
+        document.getElementById("submittedAt").innerText = "Waktu: " + data.submitted_at;
+      } catch (err) {
+        console.error("Submit failed:", err);
+        alert("Gagal menyimpan data. Periksa server log.");
+      }
+    };
   </script>
 </body>
 </html>
