@@ -1,17 +1,14 @@
 const express = require("express");
+const app = express();
 const cors = require("cors");
 const { google } = require("googleapis");
 const path = require("path");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // ✅ handles form submissions
 
 // Serve static frontend files
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 // Global queue
 let queue = [];
@@ -61,7 +58,30 @@ app.get("/api/queue", (req, res) => {
   res.json({ waiting: queue });
 });
 
-// ✅ Coaching submission route
+// Reset all counters and queue
+app.post("/api/reset_counters", (req, res) => {
+  queue = [];
+  nextNumber = 1;
+  for (let i = 1; i <= 5; i++) {
+    counters[i] = null;
+  }
+  customerData = {}; // optional: clear submissions too
+  res.json({ message: "All counters and queue have been reset." });
+});
+
+
+// ✅ Google Sheets setup
+const auth = new google.auth.GoogleAuth({
+  keyFile: path.join(__dirname, "queue-management-479913-e59087477d58.json"),
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"]
+});
+
+const sheets = google.sheets({ version: "v4", auth });
+
+// Replace with your actual spreadsheet ID
+const SPREADSHEET_ID = "1__0qQuMq4XChiQmdGHq_X470f-4X-hTGtivNGGNHQeQ";
+
+// ✅ Coaching submission route (only one version!)
 app.post("/api/submit_coaching", async (req, res) => {
   const { nama, perusahaan, email, phone, coaching, tanggal } = req.body;
 
@@ -76,28 +96,16 @@ app.post("/api/submit_coaching", async (req, res) => {
   const submittedAt = new Date().toLocaleString("id-ID");
 
   // Save to memory
-  customerData[ticket] = {
-    nama,
-    perusahaan,
-    email,
-    phone,
-    coaching,
-    tanggal,
-    submitted_at: submittedAt
-  };
+  customerData[ticket] = { nama, perusahaan, email, phone, coaching, tanggal, submitted_at: submittedAt };
   console.log("Saved submission:", customerData[ticket]);
 
   try {
-    const auth = new google.auth.GoogleAuth({
-      keyFile: path.join(__dirname, "queue-management-479913-7b58bd6a0a56.json"),
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-    });
-    const sheets = google.sheets({ version: "v4", auth });
+    const authClient = await auth.getClient();
 
     await sheets.spreadsheets.values.append({
-      auth: await auth.getClient(),
-      spreadsheetId: "1__0qQuMq4XChiQmdGHq_X470f-4X-hTGtivNGGNHQeQ",
-      range: "Sheet1!A:H",
+      auth: authClient,
+      spreadsheetId: SPREADSHEET_ID,
+      range: "Sheet1!A:H", // adjust to your sheet/tab name
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [[
@@ -113,18 +121,18 @@ app.post("/api/submit_coaching", async (req, res) => {
       }
     });
 
-    res.json({ your_number: ticket, perusahaan, submitted_at: submittedAt });
+    res.json({
+      your_number: ticket,
+      perusahaan,
+      submitted_at: submittedAt
+    });
   } catch (err) {
     console.error("Google Sheets error:", err);
     res.status(500).json({ error: "Failed to save to Google Sheets" });
   }
 });
 
-// Catch-all for unknown API routes
-app.use("/api/*", (req, res) => {
-  res.status(404).json({ error: "API route not found" });
-});
-
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
