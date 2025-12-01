@@ -1,0 +1,3 @@
+node_modules/
+queue-management-*.json
+.env
