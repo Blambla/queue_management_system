@@ -653,12 +653,27 @@ form select {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   padding: 16px;
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+label {
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="tel"],
-label {
+input[type="checkbox"] {
   width: 100%;
   box-sizing: border-box;
 }
