@@ -626,14 +626,18 @@ form select {
 }
 
 .modal-dialog {
-  margin: 40px auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
   background: #fff;
   border-radius: 8px;
-  max-height: 90vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .modal-content {
