@@ -748,3 +748,27 @@ input[type="checkbox"] {
 .checkbox-box span {
   flex-grow: 1;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-body {
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+form * {
+  box-sizing: border-box;
+}
