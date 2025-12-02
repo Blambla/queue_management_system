@@ -543,9 +543,35 @@ form select {
   background-color: #eef6ff;
 }
 
-#confirmationSection p {
-  margin: 6px 0;
-  font-size: 1em;
+.confirmation-box {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.checkbox-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.checkbox-box input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.checkbox-box span {
+  flex-grow: 1;
 }
 #queueNumber {
   color: #007bff;
