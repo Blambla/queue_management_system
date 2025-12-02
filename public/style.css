@@ -620,17 +620,18 @@ form select {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.5);
-  display: none;              /* hidden by default */
-  overflow: auto;             /* allow scrolling if dialog taller than viewport */
+  display: none;
+  overflow: auto; /* allow scrolling if modal taller than screen */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
 }
 
 .modal-dialog {
-  background: #fff;
-  border-radius: 8px;
+  margin: 40px auto;
   width: 90%;
   max-width: 500px;
+  background: #fff;
+  border-radius: 8px;
   max-height: 90vh;
-  margin: 40px auto;          /* centers horizontally, adds top spacing */
   display: flex;
   flex-direction: column;
 }
@@ -639,18 +640,21 @@ form select {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 12px 16px;
+  border-bottom: 1px solid #ccc;
+  background: #f0f0f0;
 }
 
 .modal-body {
   flex: 1;
-  overflow-y: auto;                /* scrollable body */
-  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-  padding: 20px;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y; /* critical for iOS Safari */
 }
 
 .checkbox-column {
