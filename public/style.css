@@ -750,29 +750,28 @@ input[type="checkbox"] {
 }
 
 .modal-body {
-  padding: 0;
-  display: flex;
-  justify-content: center;
+  padding: 16px;
   width: 100%;
   box-sizing: border-box;
+  display: block; /* revert from flex */
 }
 
 form {
   width: 100%;
   max-width: 500px;
   padding: 16px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
 }
 
-.modal-dialog {
-  margin: 5vh auto 0 auto;
-  width: 92%;
-  max-width: 500px;
-  background: #fff;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   box-sizing: border-box;
+  font-size: 1rem;
 }
