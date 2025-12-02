@@ -754,21 +754,21 @@ html, body {
   padding: 0;
   width: 100%;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .modal-body {
   padding: 16px;
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 form {
   width: 100%;
-  margin: 0;
+  max-width: 500px;
+  margin: 0 auto;
   padding: 0;
-  box-sizing: border-box;
-}
-
-form * {
   box-sizing: border-box;
 }
