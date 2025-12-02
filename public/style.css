@@ -750,10 +750,14 @@ input[type="checkbox"] {
 }
 
 .modal-body {
-  padding: 16px;
+  padding: 16px; 
   width: 100%;
   box-sizing: border-box;
-  display: block; /* revert from flex */
+  
+  /* --- CRITICAL CHANGE: Use Flexbox to center the form --- */
+  display: flex; /* Turn it into a flex container */
+  justify-content: center; /* Horizontally center the child elements (the form) */
+  /* Revert display: block; from your original CSS as it conflicts with flex */
 }
 
 .modal-dialog {
@@ -768,13 +772,15 @@ input[type="checkbox"] {
   box-sizing: border-box;
 }
 
-/* Remove the auto margins from the form, as the width: 100% makes them unnecessary for centering */
 form {
+  /* Set width/max-width to ensure the form respects its size limits */
   width: 100%;
-  max-width: 500px; /* Keep this if you want the form content to not exceed 500px */
-  padding: 16px;
-  /* margin-left: auto; <--- REMOVE OR COMMENT OUT */
-  /* margin-right: auto; <--- REMOVE OR COMMENT OUT */
+  max-width: 500px; 
+  
+  /* IMPORTANT: Set padding and margins to 0 or adjust as needed */
+  padding: 0; /* Remove padding here if you want .modal-body's 16px padding to define the space */
+  margin: 0; /* Ensures no auto margins interfere with flex centering */
+  
   box-sizing: border-box;
 }
 
