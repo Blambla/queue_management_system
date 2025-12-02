@@ -768,12 +768,13 @@ input[type="checkbox"] {
   box-sizing: border-box;
 }
 
+/* Remove the auto margins from the form, as the width: 100% makes them unnecessary for centering */
 form {
   width: 100%;
-  max-width: 500px;
+  max-width: 500px; /* Keep this if you want the form content to not exceed 500px */
   padding: 16px;
-  margin-left: auto;
-  margin-right: auto;
+  /* margin-left: auto; <--- REMOVE OR COMMENT OUT */
+  /* margin-right: auto; <--- REMOVE OR COMMENT OUT */
   box-sizing: border-box;
 }
 
