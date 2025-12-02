@@ -159,6 +159,24 @@
       }
     }
 
+    function formatLocalTime(utcString) {
+      const utcDate = new Date(utcString);
+      const options = {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      };
+      return utcDate.toLocaleString('id-ID', options);
+    }
+
+    // Example usage:
+    const submittedAt = formatLocalTime("2025-12-02T15:09:00Z");
+    document.getElementById("submittedAt").textContent = `Waktu: ${submittedAt}`;
+
     closeBtnIcon.addEventListener("click", attemptClose);
     closeButton.addEventListener("click", attemptClose);
 
