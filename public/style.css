@@ -749,38 +749,30 @@ input[type="checkbox"] {
   flex-grow: 1;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
 .modal-body {
-  padding: 16px;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 0;
   display: flex;
   justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 form {
   width: 100%;
   max-width: 500px;
+  padding: 16px;
   margin: 0 auto;
-  padding: 0;
   box-sizing: border-box;
 }
 
 .modal-dialog {
-  outline: 2px dashed red;
-}
-
-.modal-body {
-  outline: 2px dashed blue;
-}
-
-form {
-  outline: 2px dashed green;
+  margin: 5vh auto 0 auto;
+  width: 92%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
 }
