@@ -772,3 +772,15 @@ form {
   padding: 0;
   box-sizing: border-box;
 }
+
+.modal-dialog {
+  outline: 2px dashed red;
+}
+
+.modal-body {
+  outline: 2px dashed blue;
+}
+
+form {
+  outline: 2px dashed green;
+}
