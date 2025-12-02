@@ -615,6 +615,7 @@ form select {
   cursor: pointer;
 }
 
+/* Modal background */
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -623,13 +624,16 @@ form select {
   display: none; /* hidden by default */
   align-items: center;
   justify-content: center;
+  overflow: hidden; /* prevent background scroll */
 }
 
+/* Modal content scrollable */
 .modal-content {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  max-height: 90vh;      /* limit height */
-  overflow-y: auto;      /* allow scroll */
-  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  width: 90%;           /* responsive width */
+  max-height: 90vh;     /* limit height to viewport */
+  overflow-y: auto;     /* enable vertical scroll */
+  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
 }
