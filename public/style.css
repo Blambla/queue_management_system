@@ -782,7 +782,7 @@ form {
   margin: 0; /* Ensures no auto margins interfere with flex centering */
   
   box-sizing: border-box;
-  transform: translateX(-5px);
+  transform: translateX(-10px);
 }
 
 input[type="text"],
