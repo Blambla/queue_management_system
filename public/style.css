@@ -655,6 +655,14 @@ form select {
   padding: 16px;
 }
 
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+label {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .checkbox-grid-boxed {
   display: flex;
   flex-direction: column;
