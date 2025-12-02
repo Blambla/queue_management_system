@@ -756,6 +756,18 @@ input[type="checkbox"] {
   display: block; /* revert from flex */
 }
 
+.modal-dialog {
+  margin: 5vh auto 0 auto;
+  width: 90%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 form {
   width: 100%;
   max-width: 500px;
